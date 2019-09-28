@@ -33,7 +33,8 @@
                                 <p class="card-price" style="font-weight: bold;">
                                     {{$product['price']}}
                                 </p>
-                                <form action="{{config('app.url')}}/wishlist/{{$product['id']}}" method="post">
+                                <form action="{{config('app.url')}}/wishlist" method="post">
+                                    <input type="hidden" value="{{$product['id']}}">
                                     <button type="submit" class="btn btn-primary">Add to wishlist</button>
                                 </form>
                             </div>
