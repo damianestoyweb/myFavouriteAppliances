@@ -17,6 +17,7 @@ class CreateProductsTable extends Migration
             $table->integer('id')->unsigned();
             $table->string('name');
             $table->string('description');
+            $table->string('picture');
             $table->decimal('rating');
             $table->integer('reviews');
             $table->json('options');

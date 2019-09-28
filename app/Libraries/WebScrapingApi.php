@@ -4,16 +4,34 @@
 namespace App\Libraries;
 
 
-class Api
+class WebScrapingApi implements IApi
 {
-    public static function get($options)
+    public function get($url)
     {
-        $url = self::getEndpoint($options);
         $config = (object)[
             "url" => $url,
             "method" => "GET",
         ];
-        list($code, $response) = self::call($config);
+//        return self::call($config);
+
+        return ["Producto1", "Producto2"];
+
+        //do web scrapping
+    }
+
+    public function post()
+    {
+        // TODO: Implement post() method.
+    }
+
+    public function put()
+    {
+        // TODO: Implement put() method.
+    }
+
+    public function delete()
+    {
+        // TODO: Implement delete() method.
     }
 
     private static function getEndpoint($options)
