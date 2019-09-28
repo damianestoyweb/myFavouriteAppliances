@@ -10,21 +10,25 @@ class WebScrapingApi implements IApi
     public function get($url)
     {
         $products = [];
+        $numberOfPages = 1;
 
         $client = new Client();
-        $crawler = $client->request('GET', $url);
+        $crawler = $client->request('GET', $url . $numberOfPages);
 
-        $products = $crawler->filter('.search-results-product')->each(function ($productNode) {
-            $product = [
-                'name' => $productNode->filter('h4 > a')->text(),
-                'price' => $productNode->filter('h3.section-title')->text(),
-                'options' => $productNode->filter('.result-list-item-desc-list li')->each(function ($node) {
-                    return $node->text();
-                }),
-            ];
-            return $product;
-        });
-
+        $linkToLastPage = $crawler->filter('.result-list-pagination a')->last()->attr('href');
+        $numberOfPages = $this->getNumberOfPages($linkToLastPage);
+        for ($i = 1; $i <= $numberOfPages; $i++) {
+            $products = array_merge($products, $crawler->filter('.search-results-product')->each(function ($productNode) {
+                $product = [
+                    'name' => $productNode->filter('h4 > a')->text(),
+                    'price' => $productNode->filter('h3.section-title')->text(),
+                    'options' => $productNode->filter('.result-list-item-desc-list li')->each(function ($node) {
+                        return $node->text();
+                    }),
+                ];
+                return $product;
+            }));
+        }
         return $products;
     }
 
@@ -41,5 +45,17 @@ class WebScrapingApi implements IApi
     public function delete()
     {
         // TODO: Implement delete() method.
+    }
+
+    private function getNumberOfPages(?string $linkToLastPage)
+    {
+        $number = 0;
+        preg_match('/page=[0-9]?[0-9]/', $linkToLastPage, $matches);
+        if (!empty($matches)) {
+            $result = explode('=', $matches[0]);
+            $number = $result[1];
+        }
+
+        return (int)$number;
     }
 }
