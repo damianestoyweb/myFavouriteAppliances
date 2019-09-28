@@ -3,20 +3,29 @@
 
 namespace App\Libraries;
 
+use Goutte\Client;
 
 class WebScrapingApi implements IApi
 {
     public function get($url)
     {
-        $config = (object)[
-            "url" => $url,
-            "method" => "GET",
-        ];
-//        return self::call($config);
+        $products = [];
 
-        return ["Producto1", "Producto2"];
+        $client = new Client();
+        $crawler = $client->request('GET', $url);
 
-        //do web scrapping
+        $products = $crawler->filter('.search-results-product')->each(function ($productNode) {
+            $product = [
+                'name' => $productNode->filter('h4 > a')->text(),
+                'price' => $productNode->filter('h3.section-title')->text(),
+                'options' => $productNode->filter('.result-list-item-desc-list li')->each(function ($node) {
+                    return $node->text();
+                }),
+            ];
+            return $product;
+        });
+
+        return $products;
     }
 
     public function post()
@@ -32,20 +41,5 @@ class WebScrapingApi implements IApi
     public function delete()
     {
         // TODO: Implement delete() method.
-    }
-
-    private static function getEndpoint($options)
-    {
-        return "https://www.appliancesdelivered.ie/search/small-appliances?sort=price_desc";
-    }
-
-    /**
-     * @brief do curl request and retrieve data from api
-     * @param $config
-     * @return array
-     */
-    private static function call($config)
-    {
-        return [200, "ok"];
     }
 }

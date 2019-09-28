@@ -18,7 +18,7 @@
 
                         @if(!empty($products))
                             @foreach($products as $product)
-                                <div>{{$product}}</div>
+                                <div>{{$product['name']}}</div>
                             @endforeach
                         @endif
                     </div>

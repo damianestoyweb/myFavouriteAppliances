@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Libraries\FactoryApi;
 use App\Product;
 use Illuminate\Http\Request;
 

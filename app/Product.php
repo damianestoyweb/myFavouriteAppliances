@@ -15,7 +15,7 @@ class Product extends Model
         ];
         $products = [];
         foreach ($sources as $source) {
-            $products +=  FactoryApi::create('websScraping')->get($source);
+            $products = array_merge($products, FactoryApi::create('websScraping')->get($source));
         }
 
         return $products;
