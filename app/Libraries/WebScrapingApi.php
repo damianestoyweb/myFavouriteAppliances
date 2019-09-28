@@ -20,7 +20,9 @@ class WebScrapingApi implements IApi
         for ($i = 1; $i <= $numberOfPages; $i++) {
             $products = array_merge($products, $crawler->filter('.search-results-product')->each(function ($productNode) {
                 $product = [
+                    'id' => $this->getProductId($productNode->filter('h4 > a')->attr('href')),
                     'name' => $productNode->filter('h4 > a')->text(),
+                    'image' => $productNode->filter('.product-image img')->attr('data-src'),
                     'price' => $productNode->filter('h3.section-title')->text(),
                     'options' => $productNode->filter('.result-list-item-desc-list li')->each(function ($node) {
                         return $node->text();
@@ -57,5 +59,17 @@ class WebScrapingApi implements IApi
         }
 
         return (int)$number;
+    }
+
+    private function getProductId($string)
+    {
+        $productId = '';
+        preg_match("/\/(\d+)/",$string,$matches);
+        if (!empty($matches)) {
+            $result = explode('/', $matches[0]);
+            $productId = $result[1];
+        }
+
+        return $productId;
     }
 }
