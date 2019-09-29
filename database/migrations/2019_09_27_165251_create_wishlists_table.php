@@ -18,6 +18,7 @@ class CreateWishlistsTable extends Migration
             $table->integer('product_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->enum('type', ['public', 'private']);
+            $table->string('name')->default('My Wishlist');
             $table->timestamps();
 
             $table->primary(['product_id', 'user_id']);

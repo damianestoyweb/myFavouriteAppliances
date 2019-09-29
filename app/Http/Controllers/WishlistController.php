@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
+    private $wishlist;
+
+    public function __construct()
+    {
+        $this->wishlist = new Wishlist;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +22,16 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        //
+        if (Auth::check()) {
+            $data['wishlists'] = $this->wishlist::where('user_id', Auth::user()->id)
+                ->get('product_id');
+
+            var_dump($data);
+
+            return view('user_area.wishlists', $data);
+        } else {
+            header('Location:' . config('app.url'));
+        }
     }
 
     /**
@@ -29,19 +47,30 @@ class WishlistController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        var_dump("Store!");
-        exit();
+        $this->wishlist->product_id = $request->input('productId');
+        $this->wishlist->user_id = $request->input('userId');
+        if (!empty($request->input('name'))) {
+            $this->wishlist->name = $request->input('name');
+        }
+
+        if (!empty($request->input('type'))) {
+            $this->wishlist->type = $request->input('type');
+        } else {
+            $this->wishlist->type = "public";
+        }
+
+        $this->wishlist->save();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -52,7 +81,7 @@ class WishlistController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -63,8 +92,8 @@ class WishlistController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -75,7 +104,7 @@ class WishlistController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

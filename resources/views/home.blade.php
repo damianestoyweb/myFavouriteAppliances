@@ -33,9 +33,14 @@
                                 <p class="card-price" style="font-weight: bold;">
                                     {{$product['price']}}
                                 </p>
-                                <form action="{{config('app.url')}}/wishlist" method="post">
-                                    <input type="hidden" value="{{$product['id']}}">
-                                    <button type="submit" class="btn btn-primary">Add to wishlist</button>
+                                <form name="add-to-wishlist-{{$product['id']}}" action="{{config('app.url')}}/wishlist"
+                                      method="post">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="productId" value="{{$product['id']}}">
+                                    @if (Auth::check())
+                                        <input type="hidden" name="userId" value="{{ Auth::user()->id }}">
+                                        <button type="submit" class="btn btn-primary">Add to wishlist</button>
+                                    @endif
                                 </form>
                             </div>
                         </div>
