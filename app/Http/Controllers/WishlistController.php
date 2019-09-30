@@ -23,10 +23,11 @@ class WishlistController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            $data['wishlists'] = $this->wishlist::where('user_id', Auth::user()->id)
+            $products = $this->wishlist::where('user_id', Auth::user()->id)
                 ->get('product_id');
 
-            var_dump($data);
+            $data = $this->wishlist::where('user_id', Auth::user()->id)
+                ->get('product_id');
 
             return view('user_area.wishlists', $data);
         } else {

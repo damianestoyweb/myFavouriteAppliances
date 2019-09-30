@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     protected $productModel;
+    protected $wishlistModel;
 
     public function __construct()
     {
         $this->productModel = new Product();
+        $this->wishlistModel = new Wishlist();
     }
 
     /**
@@ -21,7 +25,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data['products'] = $this->productModel->get();
+        $data['products'] = $this->productModel::all();
+        if(Auth::check()){
+            $data['userWishlist'] = $this->wishlistModel::where('user_id', Auth::user()->id)
+                ->get('product_id')->toArray();
+        }
+        var_dump($data['userWishlist']);
         return view('home', $data);
         //do something with products
     }
@@ -44,7 +53,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = [
+            'name' => $request->input('name'),
+            'picture' => $request->input('picture'),
+            'options' => $request->input('options'),
+            'price' => $request->input('price'),
+        ];
+
+        $this->productModel->store($data);
     }
 
     /**

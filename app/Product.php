@@ -20,4 +20,14 @@ class Product extends Model
 
         return $products;
     }
+
+    public function store($data)
+    {
+        $this->name = "{$data['name']}";
+        $this->picture = "{$data['picture']}";
+        $this->options = $data['options'];
+        $this->price = $data['price'];
+
+        $this->save();
+    }
 }
