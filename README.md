@@ -5,11 +5,11 @@
 192.168.10.10	myfavouriteappliances.wow 
 ```
 # Before starting application
--Execute php artisan products:get
+-Execute php artisan products:get<br/>
 This command executes the crawler responsible of webscraping, after do the job, with the resulting data, the products table in database is filled to be consulted from the application.
 
 # Start the application
--Go to http://myfavouriteappliances.wow
+-Go to http://myfavouriteappliances.wow<br/>
 Test assignment functionalities 
 
 #Daily products update
