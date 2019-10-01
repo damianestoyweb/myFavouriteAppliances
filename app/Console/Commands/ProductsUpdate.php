@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Product;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -47,7 +46,7 @@ class ProductsUpdate extends Command
             if (!empty(count($storedProducts))) {
                 DB::table('products')->truncate();
             }
-            Artisan::call('products:create');
+            $this->call('products:get');
 
             return "Awesome! Products has been updated";
         } catch (\Exception $exception) {
