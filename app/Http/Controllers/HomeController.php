@@ -6,6 +6,7 @@ use App\Product;
 use App\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -18,9 +19,15 @@ class HomeController extends Controller
         $this->wishlistModel = new Wishlist();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $data['products'] = $this->productModel::all();
+        if (!empty($request->input('sortByField'))) {
+            $data['products'] = DB::table('products')
+                ->orderBy($request->input('sortByField'), $request->input('sortByDirection'))
+                ->get();
+        } else {
+            $data['products'] = $this->productModel::all();
+        }
         if (Auth::check()) {
             $data['userWhislistProducts'] = [];
             $userWishlistProducts = $this->wishlistModel::where('user_id', Auth::user()->id)

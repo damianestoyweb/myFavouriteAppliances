@@ -3,19 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\User;
 use App\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class WishlistController extends Controller
 {
     private $wishlist;
     private $product;
+    private $user;
 
     public function __construct()
     {
         $this->wishlist = new Wishlist;
         $this->product = new Product;
+        $this->user = new User;
     }
 
     /**
@@ -38,7 +42,7 @@ class WishlistController extends Controller
             }
             return view('user_area.wishlists', $data);
         } else {
-            header('Location:' . config('app.url'));
+            return redirect(route('wishlist.index'));
         }
     }
 
@@ -60,20 +64,25 @@ class WishlistController extends Controller
      */
     public function store(Request $request)
     {
-        $this->wishlist->product_id = $request->input('productId');
-        $this->wishlist->user_id = $request->input('userId');
-        if (!empty($request->input('name'))) {
-            $this->wishlist->name = $request->input('name');
-        }
+        try {
+            $this->wishlist->product_id = $request->input('productId');
+            $this->wishlist->user_id = $request->input('userId');
+            if (!empty($request->input('name'))) {
+                $this->wishlist->name = $request->input('name');
+            }
 
-        if (!empty($request->input('type'))) {
-            $this->wishlist->type = $request->input('type');
-        } else {
-            $this->wishlist->type = "public";
-        }
+            if (!empty($request->input('type'))) {
+                $this->wishlist->type = $request->input('type');
+            } else {
+                $this->wishlist->type = "public";
+            }
 
-        $this->wishlist->save();
-        header('Location:' . config('app.url'));
+            $this->wishlist->save();
+            return redirect(route('home'));
+        } catch (\Exception $exception) {
+            Log::error(print_r($exception, true));
+            return redirect(route('home'))->withErrors(['error' => 'Oops! Something goes wrong.']);
+        }
     }
 
     /**
@@ -120,9 +129,9 @@ class WishlistController extends Controller
     {
         $deletedRows = Wishlist::where('product_id', $id)->delete();
         if ($deletedRows > 0) {
-            header('Location: ' . route('wishlist.index'));
+            return redirect(route('wishlist.index'));
         } else {
-            header('Location: ' . route('home'));
+            return redirect(route('wishlist.index'))->withErrors(['error' => 'Unable to delete. Something goes wrong!']);
         }
     }
 
@@ -133,14 +142,12 @@ class WishlistController extends Controller
      */
     public function share(Request $request)
     {
-        $ids = $this->wishlist::where('user_id', Auth::user()->id)
-            ->get('product_id');
-        foreach ($ids as $id) {
-            $products = $this->product::where('id', $id->product_id)
-                ->get();
-            foreach ($products as $product) {
-                array_push($data['products'], $product);
-            }
+        $user = $this->user::where('email', $request->input('email'))
+            ->first('id');
+        if (!empty($user)) {
+            return redirect(route('wishlist.index'));
+        } else {
+            return redirect(route('wishlist.index'))->withErrors(['error' => 'User not found. Check email address and try again.']);
         }
     }
 }

@@ -1,7 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container" data-page="home">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                @if(!Auth::check())
+                    <div class="alert alert-info" role="alert">
+                        Please, <strong><a href="/login">log in</a></strong> or <strong><a href="/register">make and
+                                account</a></strong> to enjoy our great App!
+                    </div>
+                @endif
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <ul class="nav">
@@ -18,11 +28,16 @@
             </div>
         </div>
         <div class="row">
+            @if($errors->any())
+                <div class="alert alert-danger" role="alert">
+                    {{$errors->first()}}
+                </div>
+            @endif
             @if(!empty($products))
                 @foreach($products as $product)
                     <div class="col-xs-12 col-sm-6 col-md-4">
                         <div class="card" style="margin: 10px 0">
-                            <img class="card-img-top p-3" src="{{$product['picture']}}" alt="Card image cap">
+                            <img class="card-img-top p-3" src="{{$product['picture']}}" alt="{{$product['name']}}">
                             <div class="card-body">
                                 <h5 class="card-title">{{$product['name']}}</h5>
                                 <p class="card-text">

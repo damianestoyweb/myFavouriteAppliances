@@ -9,7 +9,7 @@
 ```php
 php artisan products:get
 ```
-This command executes the crawler responsible of webscraping, after do the job, with the resulting data, the products table in database is filled to be consulted from the application.
+This command executes the crawler responsible of webscraping. After do the job, with the resulting data, the products table in database is filled to be consulted from the application.
 
 # Start the application
 - Go to http://myfavouriteappliances.wow<br/>

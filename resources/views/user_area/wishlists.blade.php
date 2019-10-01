@@ -2,6 +2,11 @@
 
 @section('content')
     <div class="container" data-page="wishlist">
+        @if($errors->any())
+            <div class="alert alert-danger" role="alert">
+                {{$errors->first()}}
+            </div>
+        @endif
         <div class="row">
             <div class="col-xs-10 col-sm-10">
                 <h1>{{__('My Wishlist')}}</h1>
@@ -12,12 +17,14 @@
                     <i class="material-icons align-middle">share</i></a>
             </div>
         </div>
+        <hr>
         <div class="row">
             @if(!empty($products))
                 @foreach($products as $product)
                     <div class="col-xs-10 col-sm-10 pt-2 pb-2">
                         <div class="media">
-                            <img style="max-width: 100px;" src="{{$product->picture}}" class="img-thumbnail mr-3" alt="{{$product->name}}">
+                            <img style="max-width: 100px;" src="{{$product->picture}}" class="img-thumbnail mr-3"
+                                 alt="{{$product->name}}">
                             <div class="media-body">
                                 <h5 class="mt-0">{{$product->name}}</h5>
                                 <strong>{{$product->price}}</strong>
@@ -33,6 +40,14 @@
                 @endforeach
             @endif
         </div>
+
+        <div class="row pt-5">
+            <div class="col-xs-12 col-sm-12">
+                <h1>{{__('Shared with me')}}</h1>
+            </div>
+        </div>
+        <hr>
+
         <div class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
