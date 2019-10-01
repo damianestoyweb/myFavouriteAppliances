@@ -5,19 +5,36 @@
 192.168.10.10	myfavouriteappliances.wow 
 ```
 # Before starting application
-- Execute<br/>
+- Rename .env.example to .env
+- Run<br/>
 ```php
-php artisan products:get
+composer install
 ```
 
+```php
+npm or yarn install
+```
+
+```php
+npm run dev
+```
+For scss and js code to be compiled
+
+# Database setup
 - Execute<br/>
+```php
+php artisan migrate
+```
+
 ```php
 composer dump-autoload
 ```
+
 ```php
 php artisan db:seed
 ```
 To populate database.<br/>
+
 Now you have two users to test the application:<br/>
 ```
 german@square1.io	12345 
@@ -27,11 +44,11 @@ And<br/>
 luci@square1.io 	12345 
 ```
 
-- Run<br/>
+- Finally, execute<br/>
 ```php
-npm run dev
+php artisan products:get
 ```
-For scss and js code to be compiled
+This command triggers the crawler for data retriving through webscraping.
 
 # Start the application
 - Go to http://myfavouriteappliances.wow<br/>
