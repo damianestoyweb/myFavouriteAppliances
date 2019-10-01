@@ -7,14 +7,21 @@
                 {{$errors->first()}}
             </div>
         @endif
+        @if(session('message'))
+            <div class="alert alert-success" role="alert">
+                {{session('message')}}
+            </div>
+        @endif
         <div class="row">
             <div class="col-xs-10 col-sm-10">
                 <h1>{{__('My Wishlist')}}</h1>
             </div>
             <div class="col-xs-2 col-sm-2 text-right">
-                <a href="" class="btn btn-outline-primary share-button">
-                    <span class="font-weight-bold align-middle">{{__('Share it!')}}</span>
-                    <i class="material-icons align-middle">share</i></a>
+                @if(!empty($products))
+                    <a href="" class="btn btn-outline-primary share-button">
+                        <span class="font-weight-bold align-middle">{{__('Share it!')}}</span>
+                        <i class="material-icons align-middle">share</i></a>
+                @endif
             </div>
         </div>
         <hr>
@@ -44,7 +51,32 @@
         <div class="row pt-5">
             <div class="col-xs-12 col-sm-12">
                 <h1>{{__('Shared with me')}}</h1>
+                <hr>
             </div>
+        </div>
+        <div class="row">
+            @if(!empty($sharedWishlists))
+                @foreach($sharedWishlists as $wishlist)
+                    <div class="col-xs-12 col-sm-12">
+                        <h2>{{__("Wishlist of: {$wishlist['owner']['name']}")}}</h2>
+                    </div>
+                    @if(!empty($wishlist['products']))
+                        @foreach($wishlist['products'] as $product)
+                            <div class="col-xs-12 col-sm-12 pt-2 pb-2">
+                                <div class="media">
+                                    <img style="max-width: 100px;" src="{{$product['picture']}}"
+                                         class="img-thumbnail mr-3"
+                                         alt="{{$product['name']}}">
+                                    <div class="media-body">
+                                        <h5 class="mt-0">{{$product['name']}}</h5>
+                                        <strong>{{$product['price']}}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                @endforeach
+            @endif
         </div>
         <hr>
 

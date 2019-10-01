@@ -9,7 +9,29 @@
 ```php
 php artisan products:get
 ```
-This command executes the crawler responsible of webscraping. After do the job, with the resulting data, the products table in database is filled to be consulted from the application.
+
+- Execute<br/>
+```php
+composer dump-autoload
+```
+```php
+php artisan db:seed
+```
+To populate database.<br/>
+Now you have two users to test the application:<br/>
+```
+german@square1.io	12345 
+```
+And<br/>
+```
+luci@square1.io 	12345 
+```
+
+- Run<br/>
+```php
+npm run dev
+```
+For scss and js code to be compiled
 
 # Start the application
 - Go to http://myfavouriteappliances.wow<br/>

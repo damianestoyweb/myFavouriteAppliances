@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\SharedWishlist;
 use App\User;
 use App\Wishlist;
 use Illuminate\Http\Request;
@@ -12,12 +13,14 @@ use Illuminate\Support\Facades\Log;
 class WishlistController extends Controller
 {
     private $wishlist;
+    private $sharedWishlists;
     private $product;
     private $user;
 
     public function __construct()
     {
         $this->wishlist = new Wishlist;
+        $this->sharedWishlists = new SharedWishlist;
         $this->product = new Product;
         $this->user = new User;
     }
@@ -40,6 +43,9 @@ class WishlistController extends Controller
                     array_push($data['products'], $product);
                 }
             }
+
+            $data['sharedWishlists'] = $this->getSharedWishlists(Auth::user()->id);
+
             return view('user_area.wishlists', $data);
         } else {
             return redirect(route('wishlist.index'));
@@ -138,16 +144,48 @@ class WishlistController extends Controller
     /**
      * Shares the specified resource with user who match with given email.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function share(Request $request)
     {
         $user = $this->user::where('email', $request->input('email'))
-            ->first('id');
+            ->first('id')->toArray();
         if (!empty($user)) {
-            return redirect(route('wishlist.index'));
+            try {
+                $this->sharedWishlists->owner_id = Auth::user()->id;
+                $this->sharedWishlists->user_id = $user['id'];
+                $this->sharedWishlists->save();
+                return redirect(route('wishlist.index'))->with(['message' => 'Shared successfully!']);
+            } catch (\Exception $exception) {
+                Log::error(print_r($exception, true));
+                return redirect(route('wishlist.index'))->withErrors(['error' => 'Already shared with this user.']);
+            }
         } else {
             return redirect(route('wishlist.index'))->withErrors(['error' => 'User not found. Check email address and try again.']);
         }
+    }
+
+    private function getSharedWishlists($id)
+    {
+        $shared = [];
+        $sharedWishlists = $this->sharedWishlists::where('user_id', $id)
+            ->get('owner_id');
+        foreach ($sharedWishlists as $sharedWishlist) {
+            $sharedWishlistProducts = [];
+            $owner = $this->user::where('id', $sharedWishlist->owner_id)->first()->toArray();
+            $wishlists = $this->wishlist::where('user_id', $sharedWishlist->owner_id)
+                ->get('product_id');
+            foreach ($wishlists as $wishlist) {
+                $products = $this->product::where('id', $wishlist->product_id)
+                    ->get();
+                foreach ($products as $product) {
+                    array_push($sharedWishlistProducts, $product);
+                }
+            }
+            array_push($shared, ['owner' => $owner, 'products' => $sharedWishlistProducts]);
+        }
+
+        return $shared;
     }
 }
