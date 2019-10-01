@@ -17,3 +17,5 @@ Auth::routes();
 
 Route::resource('products', 'ProductController');
 Route::resource('wishlist', 'WishlistController');
+Route::get('/wishlist/delete/{id}', 'WishlistController@destroy');
+Route::post('/wishlist/share', 'WishlistController@share');

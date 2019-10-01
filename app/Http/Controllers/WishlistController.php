@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Product;
 use App\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,10 +10,12 @@ use Illuminate\Support\Facades\Auth;
 class WishlistController extends Controller
 {
     private $wishlist;
+    private $product;
 
     public function __construct()
     {
         $this->wishlist = new Wishlist;
+        $this->product = new Product;
     }
 
     /**
@@ -23,12 +26,16 @@ class WishlistController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            $products = $this->wishlist::where('user_id', Auth::user()->id)
+            $data['products'] = [];
+            $ids = $this->wishlist::where('user_id', Auth::user()->id)
                 ->get('product_id');
-
-            $data = $this->wishlist::where('user_id', Auth::user()->id)
-                ->get('product_id');
-
+            foreach ($ids as $id) {
+                $products = $this->product::where('id', $id->product_id)
+                    ->get();
+                foreach ($products as $product) {
+                    array_push($data['products'], $product);
+                }
+            }
             return view('user_area.wishlists', $data);
         } else {
             header('Location:' . config('app.url'));
@@ -66,6 +73,7 @@ class WishlistController extends Controller
         }
 
         $this->wishlist->save();
+        header('Location:' . config('app.url'));
     }
 
     /**
@@ -103,13 +111,36 @@ class WishlistController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified item from storage.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param integer
+     * @return void
      */
     public function destroy($id)
     {
-        //
+        $deletedRows = Wishlist::where('product_id', $id)->delete();
+        if ($deletedRows > 0) {
+            header('Location: ' . route('wishlist.index'));
+        } else {
+            header('Location: ' . route('home'));
+        }
+    }
+
+    /**
+     * Shares the specified resource with user who match with given email.
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    public function share(Request $request)
+    {
+        $ids = $this->wishlist::where('user_id', Auth::user()->id)
+            ->get('product_id');
+        foreach ($ids as $id) {
+            $products = $this->product::where('id', $id->product_id)
+                ->get();
+            foreach ($products as $product) {
+                array_push($data['products'], $product);
+            }
+        }
     }
 }

@@ -21,9 +21,13 @@ class HomeController extends Controller
     public function index()
     {
         $data['products'] = $this->productModel::all();
-        if(Auth::check()){
-            $data['userWishlist'] = $this->wishlistModel::where('user_id', Auth::user()->id)
-                ->get('product_id')->toArray();
+        if (Auth::check()) {
+            $data['userWhislistProducts'] = [];
+            $userWishlistProducts = $this->wishlistModel::where('user_id', Auth::user()->id)
+                ->get('product_id');
+            foreach ($userWishlistProducts as $product) {
+                array_push($data['userWhislistProducts'], $product->product_id);
+            }
         }
         return view('home', $data);
     }
