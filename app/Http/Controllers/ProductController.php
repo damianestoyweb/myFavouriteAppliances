@@ -30,9 +30,7 @@ class ProductController extends Controller
             $data['userWishlist'] = $this->wishlistModel::where('user_id', Auth::user()->id)
                 ->get('product_id')->toArray();
         }
-        var_dump($data['userWishlist']);
         return view('home', $data);
-        //do something with products
     }
 
     /**

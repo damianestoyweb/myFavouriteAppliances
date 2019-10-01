@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Console\Commands;
-ini_set('memory_limit', '1024M');
+
 use App\Product;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -42,7 +42,11 @@ class ProductsUpdate extends Command
     public function handle()
     {
         try {
-            DB::table('products')->truncate();
+            $productModel = new Product();
+            $storedProducts = $productModel::all();
+            if (!empty(count($storedProducts))) {
+                DB::table('products')->truncate();
+            }
             Artisan::call('products:create');
 
             return "Awesome! Products has been updated";

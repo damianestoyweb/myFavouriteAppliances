@@ -2,27 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Product;
+use App\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+    protected $productModel;
+    protected $wishlistModel;
+
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->productModel = new Product();
+        $this->wishlistModel = new Wishlist();
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
-        return view('home');
+        $data['products'] = $this->productModel::all();
+        if(Auth::check()){
+            $data['userWishlist'] = $this->wishlistModel::where('user_id', Auth::user()->id)
+                ->get('product_id')->toArray();
+        }
+        return view('home', $data);
     }
 }
