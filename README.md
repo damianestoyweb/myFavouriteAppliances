@@ -15,7 +15,7 @@ This command executes the crawler responsible of webscraping, after do the job, 
 -Go to http://myfavouriteappliances.wow<br/>
 Test assignment functionalities.
 
-#Daily products update
+# Daily products update
 -For application to be updated, a job has been created to be executed everyday at 02:00 am, causing 0 impact on the application behaviour.
 ```php
 php artisan products:update
