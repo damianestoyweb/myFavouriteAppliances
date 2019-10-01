@@ -19,10 +19,20 @@
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Sort by:</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Title</a>
+                        <form id="sort-by-title" action="/" method="post">
+                            @csrf
+                            <input type="hidden" name="sortByField" value="name">
+                            <input type="hidden" name="sortByDirection" value="asc">
+                            <a class="nav-link" href="#" onclick="$('#sort-by-title').submit();">Title</a>
+                        </form>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Price</a>
+                        <form id="sort-by-price" action="/" method="post">
+                            @csrf
+                            <input type="hidden" name="sortByField" value="price">
+                            <input type="hidden" name="sortByDirection" value="asc">
+                            <a class="nav-link" href="#" onclick="$('#sort-by-price').submit();">Price</a>
+                        </form>
                     </li>
                 </ul>
             </div>

@@ -22,12 +22,17 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         if (!empty($request->input('sortByField'))) {
-            $data['products'] = DB::table('products')
+            $data['products'] = [];
+            $products = DB::table('products')
                 ->orderBy($request->input('sortByField'), $request->input('sortByDirection'))
                 ->get();
+            foreach ($products as $product) {
+                array_push($data['products'], (array)$product);
+            }
         } else {
             $data['products'] = $this->productModel::all();
         }
+
         if (Auth::check()) {
             $data['userWhislistProducts'] = [];
             $userWishlistProducts = $this->wishlistModel::where('user_id', Auth::user()->id)
