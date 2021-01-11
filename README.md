@@ -1,3 +1,11 @@
+# Assignment
+Create a new website, MyFavouriteAppliances.wow. 
+On this website our users will be able to see a variety of home appliances, creating a wishlist of their favourite ones which can be shared with friends. 
+The application will use another of our sites as a primary data source - AppliancesDelivered.ie. Our new site should contain products from both the small appliances 
+(https://www.appliancesdelivered.ie/search/small-appliances?sort=price_desc) and dishwasher (https://www.appliancesdelivered.ie/dishwashers) categories on site. Users will be able to see the data for these products presented in a clean and attractive format, regardless of the device they're using to view the site. Users can order the data by title or price. 
+When on the site, a user can create an account to save their favourite appliances to their wishlist. Their wishlist can then be shared with other friends. Their friends may not like the appliances the user has selected, so the user may also need to quickly remove items from their wishlist! 
+
+
 # Environtment configuration
 - Clone the repository from: https://github.com/damianestoyweb/myFavouriteAppliances on your Homestead
 - Map in your host file the following fake url:
