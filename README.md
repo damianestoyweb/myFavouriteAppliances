@@ -7,7 +7,7 @@ When on the site, a user can create an account to save their favourite appliance
 
 
 # Environtment configuration
-- Clone the repository from: https://github.com/damianestoyweb/myFavouriteAppliances on your Homestead
+- Clone the repository from: https://github.com/damianestoyweb/web-crawler on your Homestead
 - Map in your host file the following fake url:
 ```
 192.168.10.10	myfavouriteappliances.wow 
